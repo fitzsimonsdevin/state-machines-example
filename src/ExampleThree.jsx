@@ -53,20 +53,24 @@ export const puppersStates = {
 const ExampleThree = ({ send, currentState, meta }) => {
   return (
     <div className="flex flex-col flex-1">
-      <h2>OMG THREEEEEEE!</h2>
+      <h2>Lets check out some dogs!</h2>
       <p className="my-8 px-44">
         the intent here is that we're going to look at a machine that contains
-        another machine. Think... forms in forms in forms
+        another machine. Think... forms in forms in forms. We're also
+        considering meta
       </p>
       <div className="border-2 border-black w-1/3 h-3/6 m-auto">
-        <div>current {currentState.three}</div>
+        <div>current {currentState.viewing_many}</div>
         <button
           className="bg-purple-500 text-gray-50 p-2 m-4"
           onClick={() => send("NEXT")}
         >
-          {/* TBH Accessing values here is kinda strange! I suspect there's a better way */}
-          {meta[`showHideMachine.three.${currentState.three}`].message}
+          {
+            meta[`showHideMachine.viewing_many.${currentState.viewing_many}`]
+              .message
+          }
         </button>
+        <br />
       </div>
       <button
         className="bg-purple-500 text-gray-50 p-4 m-8"

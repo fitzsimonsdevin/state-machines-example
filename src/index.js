@@ -2,8 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import { inspect } from "@xstate/inspect";
+
+import Dog from "./routes/dog";
+import Main from "./routes/main";
+import Testing from "./routes/testing";
 
 inspect({
   iframe: false,
@@ -11,7 +16,16 @@ inspect({
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <div className="App h-screen">
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="dog" element={<Dog />} />
+          <Route path="main" element={<Main />} />
+          <Route path="testing" element={<Testing />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );
