@@ -1,14 +1,17 @@
 import { createContext } from "react";
 import { createMachine, assign } from "xstate";
-import { useInterpret } from "@xstate/react";
+import { useInterpret, useActor } from "@xstate/react";
 
 const getPuppers = async (_, event) => {
   const puppers = [1, 2, 3].map(async () => {
-    const data = await fetch(`https://dog.ceo/api/breeds/image/random`);
-    console.log("data: ", data);
+    const data = await (
+      await fetch(`https://dog.ceo/api/breeds/image/random`)
+    ).json();
     return data;
   });
-  return puppers;
+
+  const results = await Promise.all(puppers);
+  return results;
 };
 
 const stateMap = {
@@ -21,7 +24,7 @@ const stateMap = {
 export const puppersMachine = createMachine(
   {
     id: "puppersMachine",
-    initial: stateMap.idle,
+    initial: stateMap.loading,
     context: {
       puppers: [],
     },
@@ -36,7 +39,8 @@ export const puppersMachine = createMachine(
             target: "loaded",
             actions: assign({
               puppers: (_, event) => {
-                return event.data;
+                const puppers = event.data.map((dog) => dog.message);
+                return puppers;
               },
             }),
           },
@@ -66,6 +70,8 @@ export const PuppersContext = createContext({});
 
 export const PuppersProvider = ({ children }) => {
   const puppersService = useInterpret(puppersMachine, { devTools: true });
+
+  console.log("puppersService: ", puppersService);
 
   return (
     <PuppersContext.Provider value={{ puppersService }}>

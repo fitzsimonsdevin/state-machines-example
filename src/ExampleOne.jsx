@@ -8,7 +8,7 @@ const ExampleOne = ({ send, img, name }) => {
         visualizer
       </p>
       <h3>{name}</h3>
-      <img className="w-60 m-auto" src={img} />
+      <img alt="cool doggo pic" className="w-60 m-auto" src={img} />
       <button
         className="bg-purple-500 text-gray-50 p-4 m-8"
         onClick={() => send("CLOSE")}

@@ -2,26 +2,27 @@ import React from "react";
 
 const doggoMachine = {
   sleeping: {
-    wake: "waiting",
+    wait: "waiting",
   },
   waiting: {
     walk: "walking",
+    sleep: "sleeping",
   },
   walking: {
-    sleep: "sleeping",
+    wait: "waiting",
   },
 };
 
-const actions = (state, actionSet) => {
+const actions = (state, contextSet) => {
   switch (state) {
     case "waiting":
-      actionSet("woof");
+      contextSet("woof");
       break;
     case "walking":
-      actionSet("pant");
+      contextSet("pant");
       break;
     case "sleeping":
-      actionSet("snooze");
+      contextSet("snore");
       break;
 
     default:
@@ -32,13 +33,13 @@ const actions = (state, actionSet) => {
 const matches = (state, matchingSet) => {
   switch (state) {
     case "waiting":
-      matchingSet("walking");
+      matchingSet(["wait"]);
       break;
     case "walking":
-      matchingSet("sleeping");
+      matchingSet(["walk", "sleep"]);
       break;
     case "sleeping":
-      matchingSet("waiting");
+      matchingSet(["sleep", "walk"]);
       break;
 
     default:
@@ -47,13 +48,16 @@ const matches = (state, matchingSet) => {
 };
 
 const Dog = () => {
-  const [doggoSays, setDoggoSays] = React.useState("snooze");
-  const [possibleStates, setPossibleStates] = React.useState("waiting");
+  const [doggoSpeechContext, setDoggoSpeechContext] = React.useState("snore");
+  const [impossibleCommands, setImpossibleCommands] = React.useState([
+    "sleep",
+    "walk",
+  ]);
 
   const reducer = (state, event) => {
     const nextState = doggoMachine[state][event];
-    matches(nextState, setPossibleStates);
-    actions(nextState, setDoggoSays);
+    matches(nextState, setImpossibleCommands);
+    actions(nextState, setDoggoSpeechContext);
     return nextState !== undefined ? nextState : state;
   };
 
@@ -62,28 +66,31 @@ const Dog = () => {
   return (
     <div className="w-80 m-auto mt-10">
       <h2>doggo is: {state}</h2>
-      <h2>{doggoSays && `doggo says: ${doggoSays}`}</h2>
+      <h2>{doggoSpeechContext && `doggo says: ${doggoSpeechContext}`}</h2>
       <div className="flex flex-col ">
+        <h2>Available Commands</h2>
         <button
-          disabled={possibleStates !== "waiting"}
+          disabled={impossibleCommands.includes("wait")}
           className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
-          onClick={() => send("wake")}
+          onClick={() => send("wait")}
         >
-          wake
+          {doggoSpeechContext === "snore"
+            ? "wake up doggo!"
+            : "Are you ready doggo?"}
         </button>
         <button
-          disabled={possibleStates !== "walking"}
+          disabled={impossibleCommands.includes("walk")}
           className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
           onClick={() => send("walk")}
         >
-          walk
+          Lets walk Doggo!
         </button>
         <button
-          disabled={possibleStates !== "sleeping"}
+          disabled={impossibleCommands.includes("sleep")}
           className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
           onClick={() => send("sleep")}
         >
-          sleep
+          Go to bed
         </button>
       </div>
     </div>
