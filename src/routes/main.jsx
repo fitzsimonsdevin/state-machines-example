@@ -111,7 +111,6 @@ const Main = () => {
     devTools: true,
   });
 
-  console.log("state: ", state);
   return (
     <>
       <h1 className="text-2xl my-4">

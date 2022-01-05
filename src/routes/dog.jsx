@@ -1,4 +1,5 @@
 import React from "react";
+import Modal from "../Modal";
 
 const doggoMachine = {
   sleeping: {
@@ -48,6 +49,7 @@ const matches = (state, matchingSet) => {
 };
 
 const Dog = () => {
+  const [showDogModal, setShowDogModal] = React.useState(true);
   const [doggoSpeechContext, setDoggoSpeechContext] = React.useState("snore");
   const [impossibleCommands, setImpossibleCommands] = React.useState([
     "sleep",
@@ -64,36 +66,42 @@ const Dog = () => {
   const [state, send] = React.useReducer(reducer, "sleeping");
 
   return (
-    <div className="w-80 m-auto mt-10">
-      <h2>doggo is: {state}</h2>
-      <h2>{doggoSpeechContext && `doggo says: ${doggoSpeechContext}`}</h2>
-      <div className="flex flex-col ">
-        <h2>Available Commands</h2>
-        <button
-          disabled={impossibleCommands.includes("wait")}
-          className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
-          onClick={() => send("wait")}
-        >
-          {doggoSpeechContext === "snore"
-            ? "wake up doggo!"
-            : "Are you ready doggo?"}
-        </button>
-        <button
-          disabled={impossibleCommands.includes("walk")}
-          className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
-          onClick={() => send("walk")}
-        >
-          Lets walk Doggo!
-        </button>
-        <button
-          disabled={impossibleCommands.includes("sleep")}
-          className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
-          onClick={() => send("sleep")}
-        >
-          Go to bed
-        </button>
-      </div>
-    </div>
+    <>
+      {showDogModal ? (
+        <Modal setShowDogModal={setShowDogModal} />
+      ) : (
+        <div className="w-80 m-auto mt-10">
+          <h2>doggo is: {state}</h2>
+          <h2>{doggoSpeechContext && `doggo says: ${doggoSpeechContext}`}</h2>
+          <div className="flex flex-col ">
+            <h2>Available Commands</h2>
+            <button
+              disabled={impossibleCommands.includes("wait")}
+              className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
+              onClick={() => send("wait")}
+            >
+              {doggoSpeechContext === "snore"
+                ? "wake up doggo!"
+                : "Are you ready doggo?"}
+            </button>
+            <button
+              disabled={impossibleCommands.includes("walk")}
+              className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
+              onClick={() => send("walk")}
+            >
+              Lets walk Doggo!
+            </button>
+            <button
+              disabled={impossibleCommands.includes("sleep")}
+              className="m-2 px-4 rounded-sm text-white py-2 bg-purple-400"
+              onClick={() => send("sleep")}
+            >
+              Go to bed
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
